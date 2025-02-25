@@ -1,8 +1,8 @@
-{% extends "students/base.html"
+{% extends "students/base.html" %}
 {% block body %}
   <h3 class="text-center m-4">Update Student</h3>
   {% if success %}
-    <div class alert-success" role="alert">
+    <div class="alert alert-success" role="alert">
       The student updated successfully.
       <a href="{% url 'index' %}" class="alert-link">Go to Home Page.</a>
     </div>
@@ -27,30 +27,34 @@
   {% endif %}
 
   <h3 class="text-center m-4">Student List</h3>
-    <div class="row justify-content-center">
-      <div class="col-8">
-        <table class="table table-striped">
-          <thead>
+  <div class="row justify-content-center">
+    <div class="col-8">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for student in students %}
             <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Actions</th>
+              <td>{{ student.id }}</td>
+              <td>{{ student.name }}</td>
+              <td>{{ student.email }}</td>
+              <td>
+                <a href="{% url 'update' student.id %}" class="btn btn-primary btn-sm">Edit</a>
+                <form action="{% url 'delete' student.id %}" method="POST" style="display:inline;">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {% for student in students %}
-              <tr>
-                <td>{{ student.id }}</td>
-                <td>{{ student.name }}</td>
-                <td>{{ student.email }}</td>
-                <td>
-                  <a href="{% url 'update' student.id %}" class="btn btn-primary btn-sm">Edit</a>
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+  </div>
 {% endblock %}
