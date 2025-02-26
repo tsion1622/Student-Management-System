@@ -43,3 +43,19 @@ class BulkStudentUploadForm(forms.Form):
             raise forms.ValidationError('Error processing file: ' + str(e))
         
         return csv_file
+
+# New feature added: A separate form for updating student profiles
+class StudentProfileForm(forms.ModelForm):
+    class Meta:
+        model = Student
+        fields = ['first_name', 'last_name', 'email']  # Allows updating only these fields
+        labels = {
+            'first_name': 'First Name',
+            'last_name': 'Last Name',
+            'email': 'Email',
+        }
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+        }
