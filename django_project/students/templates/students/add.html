@@ -48,8 +48,23 @@
     </div>
   </div>
 
+  <h3 class="text-center m-4">Download CSV Template</h3>
+  <div class="row justify-content-center mb-3">
+    <div class="col-6">
+      <div class="card bg-light mb-3">
+        <div class="card-header">
+          <i class="fa-solid fa-download fa-lg"></i> Template Download
+        </div>
+        <div class="card-body text-center">
+          <p>Download the CSV template to properly format your student data before uploading.</p>
+          <a href="{% url 'download_csv_template' %}" class="btn btn-outline-success">Download Template</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <h3 class="text-center m-4">Student List</h3>
-  
+
   <div class="row justify-content-center mb-3">
     <div class="col-8">
       <div class="input-group">
@@ -90,4 +105,4 @@
   {% else %}
     <p class="text-center">No students found.</p>
   {% endif %}
-{% endblock %}""
+{% endblock %}
