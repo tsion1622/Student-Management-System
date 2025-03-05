@@ -29,8 +29,8 @@
   <h3 class="text-center m-4">Student List</h3>
   <div class="row justify-content-center mb-3">
     <div class="col-8 text-end">
-      <!-- New feature added: Export Students button -->
-      <a href="{% url 'export_students' %}" class="btn btn-success">Export Students as CSV</a>
+      <!-- New feature: Export Students button with tooltip -->
+      <a href="{% url 'export_students' %}" class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Download the list of students as a CSV file">Export Students as CSV</a>
     </div>
   </div>
   <div class="row justify-content-center">
@@ -63,4 +63,12 @@
       </table>
     </div>
   </div>
+
+  <!-- Initialize Bootstrap tooltips -->
+  <script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  </script>
 {% endblock %}
