@@ -51,6 +51,11 @@
               </a>
             </li>
           </ul>
+          <!-- New search feature added -->
+          <form class="d-flex" action="{% url 'search_students' %}" method="GET">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
+            <button class="btn btn-outline-light" type="submit">Search</button>
+          </form>
         </div>
       </div>
     </nav>
@@ -61,7 +66,7 @@
     <footer class="mt-auto mb-4">
       <div class="text-center">
         <span>
-          Copyright &copy; <script>document.write(new Date().getFullYear())</script> Bob's Programming Academy.
+          Copyright © <script>document.write(new Date().getFullYear())</script> Bob's Programming Academy.
         </span>
       </div>
     </footer>
