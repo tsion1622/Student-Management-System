@@ -56,15 +56,4 @@ class StudentProfileForm(forms.ModelForm):
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control'}),
-        }
-
-    # New method to render the profile form with additional styling
-    def as_profile(self):
-        return self._html_output(
-            normal_row='<div class="mb-3">{{ label }}{{ field }}{{ errors }}</div>',
-            error_row='<div class="invalid-feedback">{{ errors }}</div>',
-            row_enders='</div>',
-            help_text_html='<span class="form-text">{{ help_text }}</span>',
-            errors_on_separate_row=True
-        )
+            'email': forms.EmailInput(attrs={'class
