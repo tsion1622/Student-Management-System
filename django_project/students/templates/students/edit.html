@@ -1,6 +1,14 @@
 {% extends "students/base.html" %}
 {% block body %}
   <h3 class="text-center m-4">Update Student</h3>
+
+  <!-- New feature: Help button for user assistance -->
+  <div class="text-center mb-4">
+    <a href="{% url 'help' %}" class="btn btn-info">
+      <i class="fa-solid fa-question-circle"></i> Help
+    </a>
+  </div>
+
   {% if success %}
     <div class="alert alert-success" role="alert">
       The student updated successfully.
