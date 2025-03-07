@@ -24,7 +24,7 @@
 
 <!-- New Sort By Form -->
 <div class="mb-4">
-  <form action="{% url 'index' %}" method="GET">
+  <form action="{% url 'index' %}" method="GET" class="d-flex justify-content-between">
     <div class="input-group">
       <select name="sort_by" class="form-select">
         <option value="" disabled selected>Sort By</option>
@@ -34,6 +34,8 @@
       </select>
       <button type="submit" class="btn btn-primary">Sort</button>
     </div>
+    <!-- New Button to Sort by GPA Descending -->
+    <a href="{% url 'index' %}?sort_by=gpa_desc" class="btn btn-info ms-2" title="Sort by GPA descending">Sort by GPA (Desc)</a>
   </form>
 </div>
 
