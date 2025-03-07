@@ -71,6 +71,7 @@
         <form action="{% url 'index' %}" method="GET" class="input-group">
           <input type="text" name="search" class="form-control" placeholder="Search by name" value="{{ request.GET.search }}">
           <button class="btn btn-outline-secondary" type="submit">Search</button>
+          <button class="btn btn-outline-danger" type="button" onclick="document.querySelector('input[name=search]').value='';">Reset</button>
         </form>
         <form action="{% url 'export_students' %}" method="GET" class="ml-2">
           <button class="btn btn-outline-primary" type="submit">Export to CSV</button>
