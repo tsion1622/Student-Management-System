@@ -18,6 +18,11 @@
             <form action="" method="POST">
               {% csrf_token %}
               {{ form.as_p }}
+              {% for field in form %}
+                {% if field.errors %}
+                  <div class="text-danger">{{ field.errors|striptags }}</div>
+                {% endif %}
+              {% endfor %}
               <button type="submit" class="btn btn-primary">Update</button>
               <a href="{% url 'index' %}" class="btn btn-secondary">Cancel</a>
             </form>
@@ -26,4 +31,4 @@
       </div>
     </div>
   {% endif %}
-{% endblock %}
+{% endblock %}s
