@@ -18,7 +18,19 @@
           <div class="card-body">
             <form action="{% url 'add' %}" method="POST">
               {% csrf_token %}
-              {{ form.as_p }}  <!-- Render the form fields here -->
+              
+              {% for field in form %}
+                <div class="mb-3">
+                  {{ field.label_tag }} {{ field }}
+                  {% if field.name == 'gpa' %}
+                    <small class="form-text text-muted">Enter GPA as a number between 0.0 and 4.0.</small>
+                  {% endif %}
+                  {% if field.errors %}
+                    <div class="text-danger">{{ field.errors|striptags }}</div>
+                  {% endif %}
+                </div>
+              {% endfor %}
+
               <button type="submit" class="btn btn-primary">Add</button>
               <a href="{% url 'index' %}" class="btn btn-secondary">Cancel</a>
             </form>
