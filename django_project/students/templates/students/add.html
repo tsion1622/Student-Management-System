@@ -107,3 +107,12 @@
     <p class="text-center">No students found.</p>
   {% endif %}
 {% endblock %}
+<!-- New feature: Search bar to filter students by name -->
+<div class="row justify-content-center mb-3">
+  <div class="col-8">
+    <form method="GET" action="{% url 'search_students' %}" class="d-flex">
+      <input type="text" name="q" class="form-control me-2" placeholder="Search students by name..." value="{{ request.GET.q }}">
+      <button type="submit" class="btn btn-outline-primary">Search</button>
+    </form>
+  </div>
+</div>
