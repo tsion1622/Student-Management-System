@@ -4,6 +4,13 @@
 
 {% block body %}
 <h3 class="m-4">All Students</h3>
+<!-- Export Button -->
+<div class="d-flex justify-content-between align-items-center ms-4 me-4 mb-3">
+  <h3>All Students</h3>
+  <a href="{% url 'export_students' %}" class="btn btn-success" title="Download all students as CSV">
+    <i class="fa-solid fa-file-csv"></i> Export CSV
+  </a>
+</div>
 
 <!-- New Filter Form -->
 <div class="mb-4">
