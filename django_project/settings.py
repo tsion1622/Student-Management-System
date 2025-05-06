@@ -121,10 +121,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = '/static/'  # URL where static files will be served from
-STATICFILES_DIRS = [BASE_DIR / 'students' / 'static'] 
+STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# Additional directories where static files are stored, you can add your static folder here
+STATICFILES_DIRS = [
+    BASE_DIR / "students" / "static",  # Add this if your static folder is inside the students app
+    BASE_DIR / "static",               # If you have a global static folder at the root of the project
+]
+
+# Static files collected here in production (after running collectstatic)
+STATIC_ROOT = BASE_DIR / "staticfiles" 
+
+#STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
