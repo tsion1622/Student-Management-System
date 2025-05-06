@@ -125,12 +125,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# Optional: only if you have extra static folders
 STATICFILES_DIRS = [
-    BASE_DIR / 'students' / 'static',
-    BASE_DIR / 'static',
+    BASE_DIR / "students" / "static",  # adjust this if necessary
 ]
 
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 #STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Default primary key field type
