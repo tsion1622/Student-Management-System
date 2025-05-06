@@ -16,7 +16,6 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         
-        
         <div class="collapse navbar-collapse" id="navbarColor01">
           <ul class="navbar-nav me-auto">
             <li class="nav-item">
@@ -35,41 +34,40 @@
                 <i class="fa-solid fa-envelope fa-lg"></i> Contact Us
               </a>
             </li>
-            <!-- New feature added: Help link for user assistance -->
             <li class="nav-item">
               <a class="nav-link" href="{% url 'help' %}">
                 <i class="fa-solid fa-question-circle fa-lg"></i> Help
               </a>
             </li>
-            <!-- New feature added: User Profile link -->
             <li class="nav-item">
               <a class="nav-link" href="{% url 'user_profile' %}">
                 <i class="fa-solid fa-user fa-lg"></i> User Profile
               </a>
             </li>
-            <!-- New feature added: Feedback link for user comments -->
             <li class="nav-item">
               <a class="nav-link" href="{% url 'feedback' %}">
                 <i class="fa-solid fa-comment-alt fa-lg"></i> Feedback
               </a>
             </li>
           </ul>
-          <!-- New search feature added -->
           <form class="d-flex" action="{% url 'search_students' %}" method="GET">
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
             <button class="btn btn-outline-light" type="submit">Search</button>
           </form>
         </div>
       </div>
-      
     </nav>
+
+    <!-- Voice Command Button (Fixed to the Bottom Right) -->
     <button id="start-voice-btn" class="btn btn-dark" aria-label="Click to speak a command">
       🎤 Speak Command
     </button>
+
     <div class="container-fluid">
       {% block body %}
       {% endblock %}
     </div>
+
     <footer class="mt-auto mb-4">
       <div class="text-center">
         <span>
@@ -77,28 +75,31 @@
         </span>
       </div>
     </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript for Voice Command -->
     <script>
       document.addEventListener('DOMContentLoaded', () => {
         if (!('webkitSpeechRecognition' in window)) {
           console.warn("Voice recognition not supported in this browser.");
           return;
         }
-  
+
         const recognition = new webkitSpeechRecognition();
         recognition.lang = 'en-US';
         recognition.interimResults = false;
         recognition.continuous = false;
-  
+
         document.getElementById('start-voice-btn').addEventListener('click', () => {
           recognition.start();
         });
-  
+
         recognition.onresult = function(event) {
           const command = event.results[0][0].transcript.toLowerCase();
           handleCommand(command);
         };
-  
+
         function handleCommand(command) {
           if (command.includes("add student")) {
             window.location.href = "/students/add/";
@@ -113,5 +114,20 @@
         }
       });
     </script>
+
+    <!-- Styling for the Voice Command Button -->
+    <style>
+      #start-voice-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+        background-color: #343a40;
+        color: white;
+        border-radius: 50%;
+        padding: 15px 20px;
+        font-size: 20px;
+      }
+    </style>
   </body>
 </html>
