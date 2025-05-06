@@ -54,6 +54,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+# Optional: tells WhiteNoise to compress and cache static files
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 ROOT_URLCONF = 'django_project.urls'
 
@@ -123,14 +125,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Additional directories where static files are stored, you can add your static folder here
 STATICFILES_DIRS = [
-    BASE_DIR / "students" / "static",  # Add this if your static folder is inside the students app
-    BASE_DIR / "static",               # If you have a global static folder at the root of the project
+    BASE_DIR / 'students' / 'static',
+    BASE_DIR / 'static',
 ]
 
-# Static files collected here in production (after running collectstatic)
-STATIC_ROOT = BASE_DIR / "staticfiles" 
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 #STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Default primary key field type
