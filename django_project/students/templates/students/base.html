@@ -15,6 +15,8 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
+        
+        
         <div class="collapse navbar-collapse" id="navbarColor01">
           <ul class="navbar-nav me-auto">
             <li class="nav-item">
@@ -22,6 +24,7 @@
                 <i class="fa-solid fa-list fa-lg"></i> All Students
               </a>
             </li>
+
             <li class="nav-item">
               <a class="nav-link" href="{% url 'add' %}">
                 <i class="fa-solid fa-plus fa-lg"></i> Add Student
@@ -71,5 +74,40 @@
       </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+          if (!('webkitSpeechRecognition' in window)) {
+              alert("Sorry, your browser doesn't support voice recognition.");
+              return;
+          }
+      
+          const recognition = new webkitSpeechRecognition();
+          recognition.continuous = false;
+          recognition.interimResults = false;
+          recognition.lang = 'en-US';
+      
+          document.getElementById('start-voice-btn').addEventListener('click', () => {
+              recognition.start();
+          });
+      
+          recognition.onresult = function(event) {
+              const command = event.results[0][0].transcript.toLowerCase();
+              handleVoiceCommand(command);
+          };
+      
+          function handleVoiceCommand(command) {
+              if (command.includes("add student")) {
+                  window.location.href = "/students/add/";
+              } else if (command.includes("list students")) {
+                  window.location.href = "/students/";
+              } else if (command.includes("search for")) {
+                  const name = command.split("search for")[1].trim();
+                  window.location.href = `/students/?search=${name}`;
+              } else {
+                  alert("Command not recognized.");
+              }
+          }
+      });
+      </script>
   </body>
 </html>
