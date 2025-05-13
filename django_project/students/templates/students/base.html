@@ -1,134 +1,202 @@
+{% extends "students/base.html" %}
+
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Student Management System</title>
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    
 
-  </head>
-  <body class="d-flex flex-column min-vh-100">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'index' %}">
-          <i class="fa-solid fa-graduation-cap fa-lg"></i> Student Management System
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        
-        <div class="collapse navbar-collapse" id="navbarColor01">
-          <ul class="navbar-nav me-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'index' %}">
-                <i class="fa-solid fa-list fa-lg"></i> All Students
-              </a>
-            </li>
+{% block body %}
 
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'add' %}">
-                <i class="fa-solid fa-plus fa-lg"></i> Add Student
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'contact' %}">
-                <i class="fa-solid fa-envelope fa-lg"></i> Contact Us
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'help' %}">
-                <i class="fa-solid fa-question-circle fa-lg"></i> Help
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'user_profile' %}">
-                <i class="fa-solid fa-user fa-lg"></i> User Profile
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'feedback' %}">
-                <i class="fa-solid fa-comment-alt fa-lg"></i> Feedback
-              </a>
-            </li>
-          </ul>
-          <form class="d-flex" action="{% url 'search_students' %}" method="GET">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
-            <button class="btn btn-outline-light" type="submit">Search</button>
-          </form>
+<h3 class="m-4">All Students</h3>
+
+<!-- Export Button -->
+<div class="d-flex justify-content-between align-items-center ms-4 me-4 mb-3">
+  <h3>All Students</h3>
+  <a href="{% url 'export_students' %}" class="btn btn-success" title="Download all students as CSV">
+    <i class="fa-solid fa-file-csv"></i> Export CSV
+  </a>
+</div>
+
+<!-- Filter Form -->
+<div class="mb-4">
+  <form action="{% url 'index' %}" method="GET">
+    <div class="input-group">
+      <select name="field_of_study" class="form-select">
+        <option value="" disabled selected>Select Field of Study</option>
+        {% for field in fields_of_study %}
+          <option value="{{ field }}">{{ field }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-primary">Filter</button>
+      <a href="{% url 'index' %}" class="btn btn-secondary">Clear Filter</a>
+    </div>
+  </form>
+</div>
+
+<!-- Sort Form -->
+<div class="mb-4">
+  <form action="{% url 'index' %}" method="GET" class="d-flex justify-content-between">
+    <div class="input-group">
+      <select name="sort_by" class="form-select">
+        <option value="" disabled selected>Sort By</option>
+        <option value="first_name">First Name</option>
+        <option value="last_name">Last Name</option>
+        <option value="gpa">GPA</option>
+      </select>
+      <button type="submit" class="btn btn-primary">Sort</button>
+    </div>
+    <a href="{% url 'index' %}?sort_by=gpa_desc" class="btn btn-info ms-2" title="Sort by GPA descending">Sort by GPA (Desc)</a>
+  </form>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    {% if students %}
+    <div class="card bg-light ms-4 me-4 mb-4">
+      <div class="card-header">
+        <i class="fa-solid fa-list fa-lg"></i> Student Records
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Student Number</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Field of Study</th>
+                <th scope="col">GPA</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for student in students %}
+              <tr>
+                <td>{{ student.student_number }}</td>
+                <td>{{ student.first_name }}</td>
+                <td>{{ student.last_name }}</td>
+                <td>{{ student.email }}</td>
+                <td>{{ student.field_of_study }}</td>
+                <td>{{ student.gpa }}</td>
+                <td>
+                  <!-- View Modal Trigger -->
+                  <button type="button" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#myModal{{ student.id }}">
+                    <i class="fa-solid fa-circle-info fa-lg"></i>
+                  </button>
+
+                  <!-- View Modal -->
+                  <div class="modal" id="myModal{{ student.id }}" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Student: {{ student.first_name }} {{ student.last_name }}</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          <ul class="list-unstyled">
+                            <li>Student Number: <strong>{{ student.student_number }}</strong></li>
+                            <li>First Name: <strong>{{ student.first_name }}</strong></li>
+                            <li>Last Name: <strong>{{ student.last_name }}</strong></li>
+                            <li>Email: <strong>{{ student.email }}</strong></li>
+                            <li>Field of Study: <strong>{{ student.field_of_study }}</strong></li>
+                            <li>GPA: <strong>{{ student.gpa }}</strong></li>
+                          </ul>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <a class="btn btn-warning me-1" href="{% url 'edit' student.id %}">
+                    <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                  </a>
+
+                  <!-- Delete Modal Trigger -->
+                  <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete{{ student.id }}">
+                    <i class="fa-solid fa-trash-can fa-lg"></i>
+                  </button>
+
+                  <!-- Delete Modal -->
+                  <div class="modal" id="delete{{ student.id }}" tabindex="-1" aria-labelledby="myModalLabel2" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Student: {{ student.first_name }} {{ student.last_name }}</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          <p>Are you sure you want to delete this student?</p>
+                        </div>
+                        <div class="modal-footer">
+                          <form action="{% url 'delete' student.id %}" method="POST">
+                            {% csrf_token %}
+                            <input type="submit" class="btn btn-primary" value="Delete">
+                          </form>
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
       </div>
-    </nav>
-
-    <!-- Voice Command Button (Fixed to the Bottom Right) -->
-    <button id="start-voice-btn" class="btn btn-dark" aria-label="Click to speak a command">
-      🎤 Speak Command
-    </button>
-
-    <div class="container-fluid">
-      {% block body %}
-      {% endblock %}
     </div>
+    {% else %}
+    <h5 class="alert alert-primary ms-4 me-4">No Student Records</h5>
+    {% endif %}
+  </div>
+</div>
 
-    <footer class="mt-auto mb-4">
-      <div class="text-center">
-        <span>
-          Copyright © <script>document.write(new Date().getFullYear())</script> Bob's Programming Academy.
-        </span>
-      </div>
-    </footer>
+<!-- 🔊 Voice Command Button and Output -->
+<div class="text-center mt-5">
+  <button id="voiceBtn" class="btn btn-dark">
+    🎤 Voice Command
+  </button>
+  <p id="output" class="mt-3 text-muted">Say something...</p>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- CSS and Scripts -->
+<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js"></script>
 
-    <!-- JavaScript for Voice Command -->
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        if (!('webkitSpeechRecognition' in window)) {
-          console.warn("Voice recognition not supported in this browser.");
-          return;
-        }
+<!-- 🔊 Voice Command Script -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const output = document.getElementById('output');
+    const voiceBtn = document.getElementById('voiceBtn');
 
-        const recognition = new webkitSpeechRecognition();
-        recognition.lang = 'en-US';
-        recognition.interimResults = false;
-        recognition.continuous = false;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-        document.getElementById('start-voice-btn').addEventListener('click', () => {
-          recognition.start();
-        });
+    if (!SpeechRecognition) {
+      output.textContent = '❌ Your browser does not support speech recognition.';
+      voiceBtn.disabled = true;
+      return;
+    }
 
-        recognition.onresult = function(event) {
-          const command = event.results[0][0].transcript.toLowerCase();
-          handleCommand(command);
-        };
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.continuous = false;
 
-        function handleCommand(command) {
-          if (command.includes("add student")) {
-            window.location.href = "/students/add/";
-          } else if (command.includes("list students")) {
-            window.location.href = "/students/";
-          } else if (command.includes("search for")) {
-            const name = command.split("search for")[1].trim();
-            window.location.href = `/students/?search=${name}`;
-          } else {
-            alert("Sorry, command not recognized.");
-          }
-        }
-      });
-    </script>
+    recognition.onresult = function (event) {
+      const transcript = event.results[0][0].transcript;
+      output.textContent = `✅ You said: "${transcript}"`;
+    };
 
-    <!-- Styling for the Voice Command Button -->
-    <style>
-      #start-voice-btn {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        z-index: 9999;
-        background-color: #343a40;
-        color: white;
-        border-radius: 50%;
-        padding: 15px 20px;
-        font-size: 20px;
-      }
-    </style>
-  </body>
-</html>
+    recognition.onerror = function (event) {
+      output.textContent = `❌ Error: ${event.error}`;
+    };
+
+    voiceBtn.onclick = () => {
+      output.textContent = '🎙 Listening...';
+      recognition.start();
+    };
+  });
+</script>
+
+{% endblock %}
