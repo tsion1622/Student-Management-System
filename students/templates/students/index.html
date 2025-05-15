@@ -19,6 +19,12 @@
       <div class="card-header">
         <i class="fa-solid fa-list fa-lg"></i> Student Records
       </div>
+      <div class="text-center mt-5">
+        <button id="voiceBtn" class="btn btn-dark">
+          🎤 Voice Command
+        </button>
+        <p id="output" class="mt-3 text-muted">Say something...</p>
+      </div>
       <div class="card-body">
         <div class="table-responsive">
           <table class="table table-hover">
@@ -119,9 +125,72 @@
   </div>
 </div>
 
-<!-- Include Bootstrap CSS and JS -->
-<link href="{% static 'bootstrap.min.css' %}" rel="stylesheet">
+<!-- Hidden Debug Element to Fix JS Error -->
+<div id="checkVoiceRender" style="display:none;"></div>
+
+<!-- Bootstrap CSS & JS CDN -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js"></script>
+
+<!-- Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+<!-- Voice Command Script -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const output = document.getElementById('output');
+    const voiceBtn = document.getElementById('voiceBtn');
+    const debugCheck = document.getElementById('checkVoiceRender');
+
+    if (!voiceBtn) {
+      debugCheck.textContent = '❌ Voice button not found in DOM!';
+      return;
+    }
+
+    debugCheck.textContent = '✅ Voice button successfully rendered.';
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      output.textContent = '❌ Your browser does not support speech recognition.';
+      voiceBtn.disabled = true;
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.continuous = false;
+
+    recognition.onresult = function (event) {
+      const transcript = event.results[0][0].transcript.toLowerCase().trim();
+      output.textContent = `✅ You said: "${transcript}"`;
+
+      // Voice commands logic
+      if (transcript.includes("add stud")) {
+        output.textContent += " → Redirecting to Add Student page...";
+        window.location.href = "/add/";
+      } else if (transcript.includes("show stud") || transcript.includes("list stud") || transcript.includes("all stud")) {
+        output.textContent += " → Redirecting to Student List page...";
+        window.location.href = "/";
+      } else if (transcript.includes("edit stud")) {
+        alert("You said 'edit student'. Implement your edit logic here.");
+      } else if (transcript.includes("delete stud")) {
+        alert("You said 'delete student'. Implement your delete logic here.");
+      } else {
+        output.textContent += " → Command not recognized.";
+      }
+    };
+
+    recognition.onerror = function (event) {
+      output.textContent = `❌ Error: ${event.error}`;
+    };
+
+    voiceBtn.onclick = () => {
+      output.textContent = '🎙 Listening...';
+      recognition.start();
+    };
+  });
+</script>
 
 {% endblock %}
