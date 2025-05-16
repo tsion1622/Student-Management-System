@@ -2,6 +2,14 @@
 {% load static %}
 
 {% block body %}
+<style>
+  #output {
+    font-size: 1rem;
+    font-style: italic;
+    color: #555;
+  }
+</style>
+
 <h3 class="m-4">All Students</h3>
 
 <!-- Search Bar -->
@@ -19,100 +27,94 @@
       <div class="card-header">
         <i class="fa-solid fa-list fa-lg"></i> Student Records
       </div>
-      <div class="text-center mt-5">
+
+      <div class="text-center mt-4 mb-4">
         <button id="voiceBtn" class="btn btn-dark">
           🎤 Voice Command
         </button>
-        <p id="output" class="mt-3 text-muted">Say something...</p>
+        <p id="output" class="mt-3">Say something like "add student", "edit student John Doe", "search for Alice"…</p>
       </div>
+
       <div class="card-body">
         <div class="table-responsive">
           <table class="table table-hover">
             <thead>
               <tr>
-                <th scope="col">Student Number</th>
-                <th scope="col">First Name</th>
-                <th scope="col">Last Name</th>
-                <th scope="col">Email</th>
-                <th scope="col">Field of Study</th>
-                <th scope="col">GPA</th>
-                <th scope="col">Actions</th>
+                <th>Student Number</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Field of Study</th>
+                <th>GPA</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {% for student in students %}
-                <tr>
-                  <td>{{ student.student_number }}</td>
-                  <td>{{ student.first_name }}</td>
-                  <td>{{ student.last_name }}</td>
-                  <td>{{ student.email }}</td>
-                  <td>{{ student.field_of_study }}</td>
-                  <td>{{ student.gpa }}</td>
-                  <td>
-                    <button type="button" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#myModal{{ student.id }}" aria-label="View details for {{ student.first_name }} {{ student.last_name }}">
-                      <i class="fa-solid fa-circle-info fa-lg"></i>
-                    </button>
+              <tr>
+                <td>{{ student.student_number }}</td>
+                <td>{{ student.first_name }}</td>
+                <td>{{ student.last_name }}</td>
+                <td>{{ student.email }}</td>
+                <td>{{ student.field_of_study }}</td>
+                <td>{{ student.gpa }}</td>
+                <td>
+                  <a class="btn btn-success btn-sm me-1" data-bs-toggle="modal" data-bs-target="#viewModal{{ student.id }}">
+                    <i class="fa-solid fa-circle-info"></i>
+                  </a>
 
-                    <!-- Modal - View Student -->
-                    <div class="modal" id="myModal{{ student.id }}" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true">
-                      <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="myModalLabel1">
-                              Student: {{ student.first_name }} {{ student.last_name }}
-                            </h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                          </div>
-                          <div class="modal-body">
-                            <ul class="list-unstyled">
-                              <li>Student Number: <strong>{{ student.student_number }}</strong></li>
-                              <li>First Name: <strong>{{ student.first_name }}</strong></li>
-                              <li>Last Name: <strong>{{ student.last_name }}</strong></li>
-                              <li>Email: <strong>{{ student.email }}</strong></li>
-                              <li>Field of Study: <strong>{{ student.field_of_study }}</strong></li>
-                              <li>GPA: <strong>{{ student.gpa }}</strong></li>
-                            </ul>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-                          </div>
-                        </div>
-                      </div>
+                  <a class="btn btn-warning btn-sm me-1" href="{% url 'edit' student.id %}">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                  </a>
+
+                  <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ student.id }}">
+                    <i class="fa-solid fa-trash-can"></i>
+                  </button>
+                </td>
+              </tr>
+
+              <!-- View Modal -->
+              <div class="modal fade" id="viewModal{{ student.id }}" tabindex="-1">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Student: {{ student.first_name }} {{ student.last_name }}</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
-
-                    <a class="btn btn-warning me-1" href="{% url 'edit' student.id %}" aria-label="Edit {{ student.first_name }} {{ student.last_name }}">
-                      <i class="fa-solid fa-pen-to-square fa-lg"></i>
-                    </a>
-
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete{{ student.id }}" aria-label="Delete {{ student.first_name }} {{ student.last_name }}">
-                      <i class="fa-solid fa-trash-can fa-lg"></i>
-                    </button>
-
-                    <!-- Modal - Delete Student -->
-                    <div class="modal" id="delete{{ student.id }}" tabindex="-1" aria-labelledby="myModalLabel2" aria-hidden="true">
-                      <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="myModalLabel2">
-                              Student: {{ student.first_name }} {{ student.last_name }}
-                            </h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                          </div>
-                          <div class="modal-body">
-                            <p>Are you sure you want to delete this student?</p>
-                          </div>
-                          <div class="modal-footer">
-                            <form action="{% url 'delete' student.id %}" method="POST">
-                              {% csrf_token %}
-                              <input type="submit" class="btn btn-primary" value="Delete">
-                            </form>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                          </div>
-                        </div>
-                      </div>
+                    <div class="modal-body">
+                      <ul>
+                        <li>Student Number: {{ student.student_number }}</li>
+                        <li>Email: {{ student.email }}</li>
+                        <li>Field: {{ student.field_of_study }}</li>
+                        <li>GPA: {{ student.gpa }}</li>
+                      </ul>
                     </div>
-                  </td>
-                </tr>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Delete Modal -->
+              <div class="modal fade" id="deleteModal{{ student.id }}" tabindex="-1">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <form method="POST" action="{% url 'delete' student.id %}">
+                      {% csrf_token %}
+                      <div class="modal-header">
+                        <h5 class="modal-title">Delete {{ student.first_name }}?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                      </div>
+                      <div class="modal-body">
+                        Are you sure you want to delete this student?
+                      </div>
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Yes, Delete</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
               {% endfor %}
             </tbody>
           </table>
@@ -125,14 +127,11 @@
   </div>
 </div>
 
-<!-- Hidden Debug Element to Fix JS Error -->
 <div id="checkVoiceRender" style="display:none;"></div>
 
-<!-- Bootstrap CSS & JS CDN -->
+<!-- Bootstrap & Font Awesome -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Font Awesome -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
 <!-- Voice Command Script -->
@@ -143,16 +142,15 @@
     const debugCheck = document.getElementById('checkVoiceRender');
 
     if (!voiceBtn) {
-      debugCheck.textContent = '❌ Voice button not found in DOM!';
+      debugCheck.textContent = '❌ Voice button not found!';
       return;
     }
 
-    debugCheck.textContent = '✅ Voice button successfully rendered.';
+    debugCheck.textContent = '✅ Voice button loaded.';
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
     if (!SpeechRecognition) {
-      output.textContent = '❌ Your browser does not support speech recognition.';
+      output.textContent = '❌ Speech recognition not supported in this browser.';
       voiceBtn.disabled = true;
       return;
     }
@@ -160,23 +158,31 @@
     const recognition = new SpeechRecognition();
     recognition.lang = 'en-US';
     recognition.interimResults = false;
-    recognition.continuous = false;
 
     recognition.onresult = function (event) {
       const transcript = event.results[0][0].transcript.toLowerCase().trim();
       output.textContent = `✅ You said: "${transcript}"`;
 
-      // Voice commands logic
-      if (transcript.includes("add stud")) {
-        output.textContent += " → Redirecting to Add Student page...";
+      // Actions
+      if (transcript.includes("add student")) {
+        output.textContent += " → Going to Add Student...";
         window.location.href = "/add/";
-      } else if (transcript.includes("show stud") || transcript.includes("list stud") || transcript.includes("all stud")) {
-        output.textContent += " → Redirecting to Student List page...";
+      } else if (transcript.includes("show") || transcript.includes("list") || transcript.includes("all students")) {
+        output.textContent += " → Showing all students...";
         window.location.href = "/";
-      } else if (transcript.includes("edit stud")) {
-        alert("You said 'edit student'. Implement your edit logic here.");
-      } else if (transcript.includes("delete stud")) {
-        alert("You said 'delete student'. Implement your delete logic here.");
+      } else if (transcript.includes("search for")) {
+        const name = transcript.replace("search for", "").trim();
+        output.textContent += ` → Searching for "${name}"...`;
+        window.location.href = `/?search=${encodeURIComponent(name)}`;
+      } else if (transcript.includes("edit student")) {
+        const name = transcript.replace("edit student", "").trim();
+        const [firstName, lastName] = name.split(" ");
+        if (firstName && lastName) {
+          output.textContent += ` → Attempting to edit ${firstName} ${lastName}...`;
+          window.location.href = `/edit-by-name/?first_name=${firstName}&last_name=${lastName}`;
+        } else {
+          output.textContent += " → Please say both first and last names.";
+        }
       } else {
         output.textContent += " → Command not recognized.";
       }
@@ -192,5 +198,4 @@
     };
   });
 </script>
-
 {% endblock %}
