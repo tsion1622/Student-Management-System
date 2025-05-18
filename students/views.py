@@ -1,7 +1,9 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Student, Course, Enrollment
+from .forms import EnrollmentForm
 from .models import Student
 from .forms import StudentForm
 
@@ -66,3 +68,26 @@ def delete(request, id):
         student = Student.objects.get(pk=id)
         student.delete()
     return HttpResponseRedirect(reverse('index'))
+
+def student_detail(request, student_id):
+    student = get_object_or_404(Student, id=student_id)
+    enrollments = student.enrollments.select_related('course')
+    form = EnrollmentForm()
+    return render(request, 'students/student_detail.html', {
+        'student': student,
+        'enrollments': enrollments,
+        'form': form,
+    })
+
+ def add_enrollment(request, student_id):
+    student = get_object_or_404(Student, id=student_id)
+    if request.method == 'POST':
+        form = EnrollmentForm(request.POST)
+        if form.is_valid():
+            enrollment = form.save(commit=False)
+            enrollment.student = student
+            enrollment.save()
+            return redirect('student_detail', student_id=student.id)
+    else:
+        form = EnrollmentForm()
+    return render(request, 'students/add_enrollment.html', {'form': form, 'student': student})
