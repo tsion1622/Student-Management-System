@@ -1,0 +1,31 @@
+<h2>{{ student.first_name }} {{ student.last_name }}</h2>
+<p>Student Number: {{ student.student_number }}</p>
+<p>Field of Study: {{ student.field_of_study }}</p>
+<p>GPA: {{ student.gpa }}</p>
+
+<hr>
+
+<h3>Enrolled Courses</h3>
+<table border="1">
+  <tr>
+    <th>Course</th>
+    <th>Grade</th>
+    <th>Action</th>
+  </tr>
+  {% for e in enrollments %}
+  <tr>
+    <td>{{ e.course.name }}</td>
+    <td>{{ e.grade }}</td>
+    <td><a href="{% url 'delete_enrollment' e.id %}">Delete</a></td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="3">No enrollments yet.</td></tr>
+  {% endfor %}
+</table>
+
+<h3>Add Course Enrollment</h3>
+<form method="post" action="{% url 'add_enrollment' student.id %}">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Add Enrollment</button>
+</form>
