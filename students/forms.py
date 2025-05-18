@@ -1,5 +1,5 @@
 from django import forms
-from .models import Student
+from .models import Student, Enrollment  # ✅ Added Enrollment here
 
 
 class StudentForm(forms.ModelForm):
@@ -28,3 +28,9 @@ class StudentForm(forms.ModelForm):
         if gpa is not None and (gpa < 0.0 or gpa > 4.0):
             raise forms.ValidationError("GPA must be between 0.0 and 4.0")
         return gpa
+
+
+class EnrollmentForm(forms.ModelForm):
+    class Meta:
+        model = Enrollment
+        fields = ['course', 'grade']
