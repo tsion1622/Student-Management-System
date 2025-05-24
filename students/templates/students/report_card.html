@@ -1,0 +1,13 @@
+<h2>Report Card for {{ student.first_name }} {{ student.last_name }}</h2>
+<table border="1">
+  <tr>
+    <th>Course</th>
+    <th>Grade</th>
+  </tr>
+  {% for enrollment in enrollments %}
+  <tr>
+    <td>{{ enrollment.course.name }}</td>
+    <td>{{ enrollment.grade }}</td>
+  </tr>
+  {% endfor %}
+</table>
