@@ -14,5 +14,6 @@ urlpatterns = [
     path('student/<int:student_id>/add-enrollment/', views.add_enrollment, name='add_enrollment'),  # Add enrollment
     path('enrollment/<int:enrollment_id>/delete/', views.delete_enrollment, name='delete_enrollment'),  # Delete enrollment
     path('courses/', views.course_list, name='course_list'),
+    path('student/<int:student_id>/report_card/', views.report_card, name='report_card'),
 
 ]
