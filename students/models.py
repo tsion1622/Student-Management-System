@@ -26,3 +26,4 @@ class Enrollment(models.Model):
     grade = models.CharField(max_length=2)
     def __str__(self):
         return f"{self.student} - {self.course}"
+
