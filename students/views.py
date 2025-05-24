@@ -4,6 +4,8 @@ from django.urls import reverse
 from .models import Student, Course, Enrollment
 from .forms import StudentForm, EnrollmentForm
 from .forms import CourseForm
+from .forms import GradeEntryForm
+
 
 def index(request):
     return render(request, 'students/index.html', {
@@ -98,3 +100,25 @@ def delete_enrollment(request, enrollment_id):
     enrollment = get_object_or_404(Enrollment, id=enrollment_id)
     enrollment.delete()
     return redirect('enrollment_list')  # Replace with the name of your enrollment list view
+    
+def add_or_edit_grade(request):
+    if request.method == 'POST':
+        form = GradeEntryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('grade_list')
+    else:
+        form = GradeEntryForm()
+    return render(request, 'add_grade.html', {'form': form})
+
+def grade_list(request):
+    enrollments = Enrollment.objects.select_related('student', 'course')
+    return render(request, 'grade_list.html', {'enrollments': enrollments})
+    
+def report_card(request, student_id):
+    student = Student.objects.get(id=student_id)
+    enrollments = student.enrollments.select_related('course')
+    return render(request, 'report_card.html', {
+        'student': student,
+        'enrollments': enrollments
+    })
