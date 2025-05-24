@@ -114,7 +114,7 @@ def add_or_edit_grade(request):
 def grade_list(request):
     enrollments = Enrollment.objects.select_related('student', 'course')
     return render(request, 'grade_list.html', {'enrollments': enrollments})
-    
+
 def report_card(request, student_id):
     student = Student.objects.get(id=student_id)
     enrollments = student.enrollments.select_related('course')
