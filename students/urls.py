@@ -2,14 +2,17 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.index, name='index'), 
-    path('<int:id>/', views.view_student, name='view_student'),
-    path('add/', views.add, name='add'),
-    path('add/', views.add, name='add'),
-    path('edit/<int:id>/', views.edit, name='edit'),
-    path('delete/<int:id>/', views.delete, name='delete'),
-    path('student/<int:student_id>/', views.student_detail, name='student_detail'),
-    path('student/<int:student_id>/add-enrollment/', views.add_enrollment, name='add_enrollment'),
-    path('enrollment/<int:enrollment_id>/delete/', views.delete_enrollment, name='delete_enrollment'),
+    path('', views.index, name='index'),  # Home or student list page
+    path('add/', views.add, name='add'),  # Add a new student
+    path('<int:id>/', views.view_student, name='view_student'),  # View a student by ID
+    path('edit/<int:id>/', views.edit, name='edit'),  # Edit student details
+    path('delete/<int:id>/', views.delete, name='delete'),  # Delete a student
+    path('students/admin/', views.admin_student_list, name='admin_student_list'),
+    path('add-course/', views.add_course, name='add_course'),
+    # Enrollment-related URLs
+    path('student/<int:student_id>/', views.student_detail, name='student_detail'),  # Detailed view of student
+    path('student/<int:student_id>/add-enrollment/', views.add_enrollment, name='add_enrollment'),  # Add enrollment
+    path('enrollment/<int:enrollment_id>/delete/', views.delete_enrollment, name='delete_enrollment'),  # Delete enrollment
+    path('courses/', views.course_list, name='course_list'),
 
 ]
