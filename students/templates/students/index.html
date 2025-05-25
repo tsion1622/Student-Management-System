@@ -66,7 +66,9 @@
                   <a class="btn btn-warning btn-sm me-1" href="{% url 'edit' student.id %}">
                     <i class="fa-solid fa-pen-to-square"></i>
                   </a>
-
+                   <a class="btn btn-primary btn-sm me-1" href="{% url 'report_card' student.id %}">
+                      <i class="fa-solid fa-file-lines"></i> Report Card
+                  </a>
                   <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ student.id }}">
                     <i class="fa-solid fa-trash-can"></i>
                   </button>
