@@ -118,7 +118,8 @@ def grade_list(request):
 def report_card(request, student_id):
     student = Student.objects.get(id=student_id)
     enrollments = student.enrollments.select_related('course')
-    return render(request, 'report_card.html', {
+    return render(request, 'students/report_card.html', {
         'student': student,
         'enrollments': enrollments
     })
+
