@@ -122,4 +122,4 @@ def report_card(request, student_id):
         'student': student,
         'enrollments': enrollments
     })
-
+r
