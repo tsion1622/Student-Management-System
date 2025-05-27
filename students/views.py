@@ -5,6 +5,11 @@ from .models import Student, Course, Enrollment
 from .forms import StudentForm, EnrollmentForm
 from .forms import CourseForm
 from .forms import GradeEntryForm
+from .forms import AttendanceForm
+from .models import Attendance, Student
+#from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+
 
 
 def index(request):
@@ -122,4 +127,30 @@ def report_card(request, student_id):
         'student': student,
         'enrollments': enrollments
     })
-r
+
+
+def mark_attendance(request):
+    if request.method == 'POST':
+        form = AttendanceForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('attendance_list')
+    else:
+        form = AttendanceForm()
+    return render(request, 'students/mark_attendance.html', {'form': form})
+
+# View to list all attendance
+
+def attendance_list(request):
+    attendance_records = Attendance.objects.order_by('-date')
+    return render(request, 'students/attendance_list.html', {'attendance_records': attendance_records})
+
+# View attendance for a specific student
+
+def student_attendance_detail(request, student_id):
+    student = Student.objects.get(id=student_id)
+    records = Attendance.objects.filter(student=student).order_by('-date')
+    return render(request, 'students/student_attendance_detail.html', {
+        'student': student,
+        'records': records
+    })
