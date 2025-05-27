@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 class Student(models.Model):
     student_number = models.CharField(max_length=20)
@@ -27,3 +28,18 @@ class Enrollment(models.Model):
     def __str__(self):
         return f"{self.student} - {self.course}"
 
+
+
+class Attendance(models.Model):
+    STATUS_CHOICES = [
+        ('present', 'Present'),
+        ('absent', 'Absent'),
+        ('late', 'Late'),
+    ]
+
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    date = models.DateField(default=timezone.now)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES)
+
+    def __str__(self):
+        return f"{self.student} - {self.date} - {self.status}"
