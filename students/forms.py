@@ -2,6 +2,7 @@ from django import forms
 from .models import Student, Enrollment  # ✅ Added Enrollment here
 from .models import Course
 from .models import Enrollment
+from .models import Attendance, Student
 
 
 class StudentForm(forms.ModelForm):
@@ -44,3 +45,7 @@ class GradeEntryForm(forms.ModelForm):
     class Meta:
         model = Enrollment
         fields = ['student', 'course', 'grade']        
+class AttendanceForm(forms.ModelForm):
+    class Meta:
+        model = Attendance
+        fields = ['student', 'date', 'status']        
