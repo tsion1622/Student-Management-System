@@ -39,4 +39,8 @@ class EnrollmentForm(forms.ModelForm):
 class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ['name', 'code']  
+        fields = ['name', 'code']  # Add other fields if needed
+class GradeEntryForm(forms.ModelForm):
+    class Meta:
+        model = Enrollment
+        fields = ['student', 'course', 'grade']        
