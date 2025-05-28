@@ -138,10 +138,21 @@
 
 <!-- Voice Command Script -->
 <script>
+  function speak(text) {
+    if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      speechSynthesis.cancel(); // Cancel any ongoing speech
+      speechSynthesis.speak(utterance);
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     const output = document.getElementById('output');
     const voiceBtn = document.getElementById('voiceBtn');
     const debugCheck = document.getElementById('checkVoiceRender');
+
+    // Speak welcome message and instructions for All Students page
+    speak("Welcome to the Student Management System. You are on the All Students page. You can say commands like add student, edit student, search for a student, or go to add student.");
 
     if (!voiceBtn) {
       debugCheck.textContent = '❌ Voice button not found!';
@@ -165,37 +176,62 @@
       const transcript = event.results[0][0].transcript.toLowerCase().trim();
       output.textContent = `✅ You said: "${transcript}"`;
 
-      // Actions
+      // Actions for navigation and commands
       if (transcript.includes("add student")) {
         output.textContent += " → Going to Add Student...";
+        speak("Navigating to Add Student page.");
         window.location.href = "/add/";
       } else if (transcript.includes("show") || transcript.includes("list") || transcript.includes("all students")) {
         output.textContent += " → Showing all students...";
+        speak("Showing all students.");
         window.location.href = "/";
       } else if (transcript.includes("search for")) {
         const name = transcript.replace("search for", "").trim();
         output.textContent += ` → Searching for "${name}"...`;
+        speak(`Searching for ${name}.`);
         window.location.href = `/?search=${encodeURIComponent(name)}`;
       } else if (transcript.includes("edit student")) {
         const name = transcript.replace("edit student", "").trim();
         const [firstName, lastName] = name.split(" ");
         if (firstName && lastName) {
           output.textContent += ` → Attempting to edit ${firstName} ${lastName}...`;
+          speak(`Editing student ${firstName} ${lastName}.`);
           window.location.href = `/edit-by-name/?first_name=${firstName}&last_name=${lastName}`;
         } else {
           output.textContent += " → Please say both first and last names.";
+          speak("Please say both first and last names to edit a student.");
         }
+      } else if (transcript.includes("report card")) {
+        // Try to parse "report card for John Doe"
+        const name = transcript.replace("report card for", "").trim();
+        const [firstName, lastName] = name.split(" ");
+        if (firstName && lastName) {
+          output.textContent += ` → Opening report card for ${firstName} ${lastName}...`;
+          speak(`Opening report card for ${firstName} ${lastName}.`);
+          // Assuming you have a URL pattern for report card by name:
+          window.location.href = `/report-card-by-name/?first_name=${firstName}&last_name=${lastName}`;
+        } else {
+          output.textContent += " → Please say full name for report card.";
+          speak("Please say full name for report card.");
+        }
+      } else if (transcript.includes("help")) {
+        const helpText = "You can say commands like add student, show all students, search for a student by name, edit student followed by first and last name, or go to report card of a student.";
+        output.textContent += " → Help: " + helpText;
+        speak(helpText);
       } else {
         output.textContent += " → Command not recognized.";
+        speak("Sorry, command not recognized. Please try again.");
       }
     };
 
     recognition.onerror = function (event) {
       output.textContent = `❌ Error: ${event.error}`;
+      speak("There was an error with speech recognition.");
     };
 
     voiceBtn.onclick = () => {
       output.textContent = '🎙 Listening...';
+      speak("Listening for your command.");
       recognition.start();
     };
   });
