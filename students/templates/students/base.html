@@ -48,5 +48,21 @@
       </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+  function speak(text) {
+    if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      speechSynthesis.cancel();
+      speechSynthesis.speak(utterance);
+    }
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    // You can set this variable from your Django views for each template render
+    const pageName = "{{ page_name|default:'Unknown Page' }}";
+    let welcomeMessage = `Welcome to the Student Management System. You are on the ${pageName}. Please speak your command to navigate or perform actions.`;
+    speak(welcomeMessage);
+  });
+</script>
+
   </body>
 </html>
