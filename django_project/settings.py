@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'students',
     'accounts',
     'rest_framework',
+    'rest_framework_simplejwt',
     'corsheaders',
 ]
 
@@ -53,11 +54,18 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
+AUTH_USER_MODEL = 'accounts.CustomUser'
 
 ROOT_URLCONF = 'django_project.urls'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React dev server
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
 
 TEMPLATES = [
     {
