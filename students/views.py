@@ -7,11 +7,38 @@ from .forms import CourseForm
 from .forms import GradeEntryForm
 from .forms import AttendanceForm
 from .models import Attendance, Student
+from rest_framework.decorators import api_view
+from rest_framework import status
 #from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from .serializers import UserSerializer
+from .models import CustomUser
+from django.contrib.auth import authenticate
 
 
 
+@api_view(['POST'])
+def login_view(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+
+    if not username or not password:
+        return Response({'error': 'Username and password are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+    user = authenticate(username=username, password=password)
+
+    if user is not None:
+        role = user.role  # directly from CustomUser.role
+        return Response({
+            'message': 'Login successful',
+            'username': user.username,
+            'role': role,
+        })
+    else:
+        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 def index(request):
     return render(request, 'students/index.html', {
         'students': Student.objects.all()
@@ -154,3 +181,10 @@ def student_attendance_detail(request, student_id):
         'student': student,
         'records': records
     })
+class CurrentUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+
