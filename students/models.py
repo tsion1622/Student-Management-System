@@ -2,7 +2,8 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 
-# Custom User with roles
+
+# Custom User model with role support
 class CustomUser(AbstractUser):
     ROLE_CHOICES = (
         ('teacher', 'Teacher'),
@@ -13,15 +14,26 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.username
 
-# Student linked to CustomUser via OneToOneField
+
+# Student profile linked to CustomUser
 class Student(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='student_profile')
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='student')
     student_number = models.CharField(max_length=20, unique=True)
     field_of_study = models.CharField(max_length=100)
     gpa = models.FloatField()
 
     def __str__(self):
+        return f"{self.user.first_name} {self.user.last_name} ({self.student_number})"
+
+
+# Teacher profile linked to CustomUser (add this if needed)
+class Teacher(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='teacher')
+    department = models.CharField(max_length=100)
+
+    def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
+
 
 # Course model
 class Course(models.Model):
@@ -29,9 +41,10 @@ class Course(models.Model):
     code = models.CharField(max_length=10)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.code})"
 
-# Enrollment linking Student and Course with grade
+
+# Enrollment model linking Student and Course with grade
 class Enrollment(models.Model):
     GRADE_CHOICES = [
         ('A', 'A'),
@@ -46,9 +59,10 @@ class Enrollment(models.Model):
     grade = models.CharField(max_length=2, choices=GRADE_CHOICES)
 
     def __str__(self):
-        return f"{self.student} enrolled in {self.course} with grade {self.grade}"
+        return f"{self.student} - {self.course} - Grade: {self.grade}"
 
-# Attendance model for students
+
+# Attendance model
 class Attendance(models.Model):
     STATUS_CHOICES = [
         ('present', 'Present'),
